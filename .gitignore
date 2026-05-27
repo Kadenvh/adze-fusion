@@ -1,0 +1,46 @@
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Obsidian — vault config is per-machine, the vault contents are the artifact
+.obsidian/workspace*
+.obsidian/cache/
+.obsidian/plugins/*/data.json
+
+# Python (Fusion 360 add-ins) — when prototype code lands
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Build / dist outputs (for future prototype)
+dist/
+build/
+*.egg-info/
+*.whl
+
+# Local secrets / config
+.env
+.env.local
+*.local.json
+
+# Local agent state
+.claude/settings.local.json
+.claude/state/
+.ava/
+
+# Logs
+*.log
+logs/
+
+# Temp working files
+tmp/
+scratch/
