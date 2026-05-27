@@ -48,6 +48,30 @@ If a claim is plausibly true but you couldn't verify in a reasonable amount of t
 
 **Never** silently make a claim without one of these three markers (citation, `[empirical]`, or `[unverified]`).
 
+## Confidence field
+
+Every entry's frontmatter includes a `confidence` field: `high` · `medium` · `low`.
+
+- **high** — Primary sources, multiple independent confirmations, or empirical verification.
+- **medium** — Single credible source, or strong inference from established facts.
+- **low** — Single weak source, or community opinion, or inference without verification. **Cannot be relied on for decisions.** Treated as a starting point for further research, not as load-bearing.
+
+Lint queries surface all `confidence: low` entries during health checks. The 10-Source Test for stage transitions does NOT count `low` entries.
+
+## Contradiction callout
+
+When the vault contains conflicting claims that haven't been resolved, **flag them explicitly** with the `[!contradiction]` callout block:
+
+```markdown
+> [!contradiction]
+> Entry A says X (source: [[source-1]])
+> Entry B says Y (source: [[source-2]])
+> Resolution: pending — needs further research / decision
+
+```
+
+The lint operation surfaces all open contradictions. The agent never silently picks one side. The user resolves contradictions, or the agent dispatches research to resolve them.
+
 ---
 
 ## Entry templates

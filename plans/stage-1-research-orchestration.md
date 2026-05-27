@@ -2,134 +2,134 @@
 
 **Stage:** 1 (Research dispatch)
 **Status:** Planned, not yet dispatched
-**Prerequisite:** Stage 0 complete (CLAUDE.md, vault rules, charter all landed)
+**Prerequisite:** Stage 0 + Stage 0.5 complete
 **Owner:** adze-fusion agent
+**Revised:** 2026-05-15 (Stage 0.5) — restructured from 4×~4 to 3×5 per P4 verified guidance
 
 This document is the dispatch plan. Stage 1 begins when this plan is invoked — the agent fires the streams below in parallel waves, drains findings into the vault, and reports when all are complete.
 
 ---
 
-## Dispatch principle
+## Dispatch principles (verified)
 
-**Parallel by default.** Within each wave, all streams fire in a single message via multiple `Agent` tool calls. Waves are serial only when a later wave depends on earlier wave findings.
-
-Each stream is a sub-agent with:
-
-- **Explicit brief** — specific questions, context, what's already known to avoid
-- **Success criteria** — what makes the findings vault-worthy
-- **Output format** — single markdown doc under 600 words with: First principles · Findings · Sources · Decision implications · Open questions
-- **Source rigor instruction** — every claim has a URL or `[empirical]` / `[unverified]` marker
+1. **3-5 parallel workers per wave** — Anthropic's documented sweet spot per [`research/findings/P4-subagent-orchestration.md`](../research/findings/P4-subagent-orchestration.md). Not 15 at once. Context isolation is the benefit, not just speed.
+2. **`subagent_type = general-purpose`** for all research streams. Declare custom `research-worker` agent in `.claude/agents/` once Stage 1 stabilizes the pattern (per P4 advice: declare custom only once patterns repeat).
+3. **Each brief includes:** objective · specific questions · output format · source rules · task boundaries · success criteria · file-write target.
+4. **File-write outputs:** agents write findings to `research/findings/<stream-id>.md` and return ~100-word summary in their response.
+5. **Source-carve parallel workers** — agents in the same wave don't search the same surfaces. Each gets a distinct slice.
+6. **Verify returns** against numbered questions before accepting / promoting.
 
 ---
 
 ## Waves
 
-### Wave A — Platform Reality (5 streams, parallel)
+### Wave 1 — Fusion Platform Deep-Dive (5 streams, parallel)
 
-Foundation. Until we understand Fusion's actual runtime, everything downstream is speculation.
+The foundation. Until we understand Fusion's runtime + Anthropic's connector + cross-platform reality, downstream architecture is speculation.
 
-| ID | Subject | subagent_type | Output target |
+| ID | Subject | Source-carve | Output file |
 |---|---|---|---|
-| A1 | Fusion 360 Python add-in API: runtime, lifecycle, install path, packaging | `frontier-research` | `findings/A1-fusion-python-runtime.md` → vault: `01-platforms/fusion-360.md`, `03-apis/fusion-python-api.md` |
-| A2 | Fusion threading model: UI thread, async, document state, callbacks | `general-purpose` | `findings/A2-fusion-threading.md` → vault: extend `03-apis/fusion-python-api.md` or new threading entry |
-| A3 | Fusion document model: timeline, workspaces (Design/Render/Manufacture/Simulation), object graph | `general-purpose` | `findings/A3-fusion-doc-model.md` → vault: `01-concepts/timeline-vs-feature-tree.md`, related platform entries |
-| A4 | Fusion mesh handling: native mesh workspace, BREP/T-Spline/mesh conversion, T-Splines as the parametric path | `general-purpose` | `findings/A4-fusion-mesh.md` → vault: `01-concepts/mesh-in-fusion.md` |
-| A5 | Cross-platform reality: Mac vs Windows API differences, sandboxing, filesystem access, local model integration on Mac | `frontier-research` | `findings/A5-fusion-cross-platform.md` → vault: `02-platforms/fusion-360-mac.md` if material differences |
+| W1-1 | Fusion Python add-in API: runtime, lifecycle, packaging, install path | help.autodesk.com Fusion docs, autodesk.com developer docs, official samples | `findings/W1-1-fusion-python-runtime.md` |
+| W1-2 | Fusion document model + workspaces + threading | help.autodesk.com Fusion API reference, community blogs on threading | `findings/W1-2-fusion-doc-model.md` |
+| W1-3 | **Anthropic Fusion connector deep-dive** — capabilities, security model, licensing (Fusion subscription requirement), extensibility | anthropic.com news, aps.autodesk.com blog, Anthropic connector docs | `findings/W1-3-anthropic-fusion-connector.md` |
+| W1-4 | Autodesk App Store mechanics + monetization + listing requirements | apps.autodesk.com, Autodesk dev portal | `findings/W1-4-app-store.md` |
+| W1-5 | Cross-platform reality (Mac vs Windows for connectors + add-ins) | Autodesk system requirements, Mac-specific docs, community Mac forums | `findings/W1-5-cross-platform.md` |
 
-**Success criteria (Wave A as a whole):**
-- We can describe Fusion's add-in architecture in 3 sentences without hedging
-- We know the equivalent of adze-cad's `IUiThreadInvoker` pattern in Fusion
-- We know if/how local model integration works on Mac
+**Wave 1 success criteria:**
+- We can describe Fusion's add-in architecture in 3 sentences without hedging.
+- We have a verified answer on whether adze-fusion can ship as a connector / MCP server alongside Anthropic's official one.
+- We know the licensing implications for users (Fusion subscription tier required, etc.).
+- We know Mac vs Windows parity status.
 
 ---
 
-### Wave B — AI / MCP / Connector Ecosystem (4 streams, parallel)
+### Wave 2 — Ecosystem + Community (5 streams, parallel, AFTER Wave 1 fully returns)
 
-| ID | Subject | subagent_type | Output target |
+Once we know what's possible technically, we map who's doing what and how users live.
+
+| ID | Subject | Source-carve | Output file |
 |---|---|---|---|
-| B1 | Autodesk Assistant: actual capabilities (vs marketing), what it can/can't do today, roadmap signals | `frontier-research` | `findings/B1-autodesk-assistant.md` → vault: `04-tools/autodesk-assistant.md` |
-| B2 | MCP for Fusion: `@sockcymbal/autodesk-fusion-mcp-python` analysis (architecture, surface, status), plus any other Fusion MCP servers | `general-purpose` | `findings/B2-fusion-mcp-servers.md` → vault: per-server entries in `05-mcp-servers/` |
-| B3 | Backflip and mesh-to-CAD AI: what it does, how it integrates, what they exposed of their architecture | `general-purpose` | `findings/B3-backflip.md` → vault: `04-tools/backflip.md` |
-| B4 | Other AI/agentic plugins on Fusion 360 App Store: catalog with feature, pricing, status | `frontier-research` | `findings/B4-fusion-ai-plugins.md` → vault: per-plugin entries in `04-tools/` |
+| W2-1 | Top 3 community Fusion MCP servers — **empirical analysis** (clone + run if practical) | GitHub repos: faust-machines, sockcymbal, Joe-Spencer | `findings/W2-1-community-mcp-empirical.md` |
+| W2-2 | Autodesk Assistant + Project Salvador — current capabilities, extensibility, roadmap | Autodesk official blog, GoEngineer summaries | `findings/W2-2-autodesk-assistant.md` |
+| W2-3 | Backflip + competitive AI plugins on Fusion App Store (with pricing) | Backflip site, Autodesk App Store filtered for AI | `findings/W2-3-competitors.md` |
+| W2-4 | Fusion community surfaces — forums, Reddit r/Fusion360, YouTube creators, Discord | Autodesk Forums, Reddit, YouTube trends | `findings/W2-4-community.md` |
+| W2-5 | Training/reseller landscape via **ava-docs MCP** (Hawkridge / Markforged / SolidProfessor equivalents — finally unblocked) | ava-docs `mcp__ava-docs__*` | `findings/W2-5-training-resellers.md` |
 
-**Success criteria (Wave B):**
-- We have a clear map of every AI/agentic tool currently on Fusion, with sources
-- We know whether MCP-first architecture is supported by real working examples
-- We can identify the differentiated value prop for adze on Fusion
+**Wave 2 success criteria:**
+- Empirical baseline (not just doc-claims) on what community MCP servers actually do.
+- Clear map of who competes with adze-fusion on the App Store and at what price.
+- We've drained the long-deferred `nqgeaw7ivx` open handoff from adze-cad.
 
 ---
 
-### Wave C — Community + Distribution (3 streams, parallel)
+### Wave 3 — Architecture + Patterns (5 streams, parallel, AFTER Wave 2 fully returns)
 
-| ID | Subject | subagent_type | Output target |
+Synthesis-ready. Combines what we now know about Fusion (Wave 1) and ecosystem (Wave 2) with portable patterns from sibling projects.
+
+| ID | Subject | Source-carve | Output file |
 |---|---|---|---|
-| C1 | Autodesk App Store mechanics: listing requirements, signing, revenue split, review cycle, free-vs-paid dynamics | `frontier-research` | `findings/C1-autodesk-app-store.md` → vault: `04-tools/autodesk-app-store.md` |
-| C2 | Fusion community: Autodesk Forums, Reddit r/Fusion360, YouTube creators, Discord, demographic breakdown | `general-purpose` | `findings/C2-fusion-community.md` → vault: per-community entries in `06-communities/` |
-| C3 | Training, resellers, partner programs for Fusion: equivalents to SOLIDWORKS' Hawkridge / Markforged / SolidProfessor — **use `ava-docs` MCP** (was rejected on adze-cad, now unblocked) | `general-purpose` with ava-docs | `findings/C3-fusion-training-partners.md` → vault: per-org entries in `06-communities/` |
+| W3-1 | Crawl `C:\adze-cad` for portable architectural patterns (agentic loop, write safety lifecycle, recipe capture, trust tiers, error tiers) — **Explore subagent** | Local `C:\adze-cad\src\`, `plans\`, brain.db | `findings/W3-1-adze-cad-patterns.md` |
+| W3-2 | Multi-CAD architecture patterns from outside our domain (Cursor, Copilot, Replit, JetBrains AI Assistant — how do they handle shared-core + per-host adapter) | Engineering blogs from those tools | `findings/W3-2-multi-platform-ai-tools.md` |
+| W3-3 | ScrapingArt Karpathy-LLM-Wiki-Stack — extract what we adopt vs hold back | github.com/ScrapingArt/Karpathy-LLM-Wiki-Stack repo contents | `findings/W3-3-scrapingart-extraction.md` |
+| W3-4 | Anthropic Connectors API — can adze-fusion ship its own connector as a first-class Claude integration? | Anthropic docs, Anthropic connector samples | `findings/W3-4-anthropic-connectors-api.md` |
+| W3-5 | Synthesis sketch — multi-CAD shape proposal (informed by W1+W2+W3-1..4) — **draft of ADR-001 foundation** | All prior findings | `findings/W3-5-multi-cad-shape.md` |
 
-**Success criteria (Wave C):**
-- We know how an adze Fusion add-in would actually reach users
-- We know what monetization paths are realistic (free, paid, freemium, subscription)
-- We've drained the long-deferred `nqgeaw7ivx` open handoff
-
----
-
-### Wave D — Portable Patterns from adze-cad (3 streams, SERIAL after A/B/C started)
-
-Wave D depends partially on A/B/C findings — patterns we want to port should match what we now understand about Fusion's reality.
-
-| ID | Subject | subagent_type | Output target |
-|---|---|---|---|
-| D1 | Crawl `C:\adze-cad` for portable architectural patterns: agentic loop, write safety lifecycle, recipe capture, trust tiers, error tiers, rate limiting. Map each to "fits Fusion / needs rewrite / doesn't apply" | `Explore` | `findings/D1-adze-cad-patterns.md` → vault: per-pattern entries in `07-patterns/` |
-| D2 | Crawl `C:\adze-cad\plans\` for portable decisions and design docs. Specifically: ADR-001 (native UI authority), Decision #21-#30, the MCP design, the opt-in telemetry brief | `Explore` | `findings/D2-adze-cad-decisions.md` → vault: under `07-patterns/` and reference in `09-sources/` |
-| D3 | Multi-CAD architecture synthesis: based on A/B/C/D1/D2, propose shape — shared core vs split, where the broker lives, where recipes/memory live, how MCP fits | `general-purpose` (me synthesizing, agent-prepared) | `findings/D3-multi-cad-architecture-sketch.md` → vault: `07-patterns/multi-cad-architecture-shape.md` (draft for ADR-001) |
-
-**Success criteria (Wave D):**
-- Every load-bearing adze-cad pattern has a vault entry with a Fusion-port verdict
-- D3 produces a coherent multi-CAD shape that ADR-001 can be written against
+**Wave 3 success criteria:**
+- Every load-bearing adze-cad pattern has a Fusion-port verdict (port / rewrite / drop).
+- Concrete answer on whether adze-fusion should ship as an MCP / Anthropic connector / both / neither.
+- W3-5 is a coherent multi-CAD shape that ADR-001 (Stage 3) can be written against.
 
 ---
 
-## Triage and promotion flow
+## 10-Source Test gate
 
-After each wave returns:
+Stage 1 → Stage 2 transition requires:
 
-1. Read every `findings/<id>.md` file
-2. For each finding, decide:
-   - **Promote** — atomize into vault entries (one concept per file), with full templates, source rigor, cross-links
-   - **Defer** — finding is real but not yet vault-ready (more research needed) → keep in inbox with a follow-up question
-   - **Reject** — finding didn't meet success criteria → record reason in `findings/<id>.md` and re-dispatch with refined brief
-3. After promotion, update `findings/<id>.md` with a header: `Promoted to vault: [[entry-name]] [[another-entry]]`
-4. Drain `vault/inbox/` before moving to the next wave
+- ≥ **10 promoted vault entries** (not findings — actual atomized, sourced, replicable entries in category folders)
+- Coverage across **≥ 6 of 9 categories** (01-concepts, 02-platforms, 03-apis, 04-tools, 05-mcp-servers, 06-communities, 07-patterns, 08-decisions, 09-sources)
+- All 10+ entries clear the 4-point quality bar (first-principles · sourced · replicable · load-bearing)
+- `confidence: low` entries don't count toward the 10
+- `vault/inbox/` is empty
+- `vault/_health.md` health queries return clean (no orphans, no open contradictions, no broken links, no source-rigor violations)
 
----
-
-## Anti-patterns to avoid in Stage 1
-
-- ❌ Dumping raw agent output into a vault category folder — findings get atomized
-- ❌ Promoting findings with `[unverified]` claims unless explicitly tracked
-- ❌ Skipping cross-links on new vault entries
-- ❌ Letting waves go serial when they could parallelize
-- ❌ Starting Wave D before Wave A/B/C have at least started returning
-- ❌ Letting `vault/inbox/` grow across waves
+Until the test passes, **no synthesis is written**. Stage 2 doesn't begin. The agent EITHER promotes more findings (preferred) OR dispatches additional research.
 
 ---
 
-## What Stage 1 does NOT do
+## Triage + promotion flow
 
-- Build prototype code (Stage 4)
-- Make architecture decisions (Stage 3)
-- Write the synthesis (Stage 2)
-- Cite or copy adze-cad code (extract patterns only via D1/D2)
+Per Karpathy LLM-Wiki ingest operation:
+
+1. Read every `findings/<id>.md` file after each wave returns.
+2. For each finding, decide: **promote** (atomize into vault entries) / **defer** (real but not vault-ready — keep in `inbox/` with follow-up question) / **reject** (didn't meet success criteria — record reason, re-dispatch with refined brief).
+3. On promote: write atomized entries using the right templates from `vault/00-meta/_templates/`. Set `confidence` field honestly. Add `## Related` cross-links. Source-rigor non-negotiable.
+4. Update `vault/index.md` with new entries (one line each).
+5. Append to `vault/log.md` (`## [YYYY-MM-DD] ingest | Wave X finding Y → [[entry-name]]` format).
+6. Update `vault/hot.md` to reflect new state.
+7. After all promotions: drain `inbox/`. Update `findings/<id>.md` header with `Promoted to vault: [[entry-1]] [[entry-2]] …`.
+
+---
+
+## Anti-patterns
+
+- ❌ Dispatching all 15 streams in one go — waves are serialized for triage capacity.
+- ❌ Dumping raw findings into category folders — findings → triage → atomized entries.
+- ❌ Promoting findings with unresolved `[unverified]` claims.
+- ❌ Skipping cross-links on new entries.
+- ❌ Letting `vault/inbox/` grow across waves.
+- ❌ Starting Stage 2 synthesis before 10-Source Test passes.
+- ❌ Spawning two agents on the same source — source-carve.
+- ❌ Treating sub-agent return summaries as canonical — read the actual files.
 
 ---
 
 ## Closing Stage 1
 
 Stage 1 closes when:
-- All findings/ files exist and have a `Promoted to vault: …` header
-- All vault entries pass the 4-point quality bar
+- All 15 findings/ files exist with `Promoted to vault: …` headers
+- All atomized vault entries pass the 4-point quality bar
+- 10-Source Test passes (verified via `vault/_health.md`)
 - `vault/inbox/` is empty
-- A short `STAGE-1-COMPLETE.md` is written summarizing: what we learned, what surprised us, what we now know is wrong, where the gaps remain
+- A short `STAGE-1-COMPLETE.md` is written: what we learned, what surprised us, what we now know is wrong, where the gaps remain
 
-Then the agent surfaces "Stage 1 complete, ready to begin Stage 2 synthesis" to the user.
+Then the agent surfaces "Stage 1 complete, ready to begin Stage 2 synthesis" and pauses for user confirmation.

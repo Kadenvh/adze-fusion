@@ -6,6 +6,8 @@ url: <URL>
 fetched: YYYY-MM-DD
 author: <author or org>
 type: <official-doc | community-blog | github-repo | forum-thread | youtube-talk | paper | book>
+status: <draft | promoted>
+confidence: <high | medium | low>
 ---
 
 # <Source title>

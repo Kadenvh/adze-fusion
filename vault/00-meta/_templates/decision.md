@@ -3,6 +3,7 @@ title: ADR-NNN — <Decision title>
 category: 08-decisions
 tags: [adr, decision]
 status: <proposed | accepted | superseded>
+confidence: <high | medium | low>
 date: YYYY-MM-DD
 supersedes: <NNN or none>
 ---

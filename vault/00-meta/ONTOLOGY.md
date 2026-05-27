@@ -2,6 +2,23 @@
 
 The vault is organized as a flat-ish taxonomy of **stable** top-level categories. New categories are amended decisions, not silent folder additions.
 
+## Three-layer architecture (Karpathy LLM-Wiki pattern)
+
+The project root has three distinct surfaces:
+
+```
+C:\adze-fusion\
+├── raw/        ← Immutable source documents. Agent reads, never modifies. (Karpathy Layer 1)
+├── vault/      ← LLM-curated wiki. THIS file's taxonomy applies here. (Layer 2)
+└── CLAUDE.md   ← Master schema / agent operating manual. (Layer 3)
+```
+
+- **`raw/`** holds fetched articles, archived gists, source PDFs, agent-finding artifacts. The agent reads these but never edits them. New material gets dropped into `raw/` and then the **ingest** operation atomizes it into vault entries.
+- **`vault/`** is what this file governs. Everything below is `vault/` taxonomy.
+- **`CLAUDE.md`** is the schema. Changes to it are agent edits, committed deliberately.
+
+This three-layer split is borrowed from [[../09-sources/scrapingart-llm-wiki-stack]] which itself implements [[../09-sources/karpathy-llm-wiki-gist]].
+
 ## Top-level categories
 
 | # | Category | Folder | What goes here | Example entries |
@@ -45,6 +62,18 @@ If none fit, the entry needs to be atomized into multiple entries that DO fit. I
 Every entry has a `Related:` section at the bottom listing `[[entry-name]]` for relevant entries in other categories. Aim for 2–6 backlinks per entry. Too few = silo; too many = noise.
 
 Index pages (e.g., `02-platforms/README.md`) are optional and not authoritative — the ontology + cross-links are. Don't try to maintain manual lists.
+
+## Graph topology — tree-shaped, not cluster-shaped
+
+Per [[../09-sources/scrapingart-llm-wiki-stack]] and reinforced by P3 findings: prefer a **tree-shaped graph** over a cluster-hub graph. A single "gravity well" hub that accumulates too many connections degrades navigability. The desired shape:
+
+```
+index → overview → cluster hub → member pages → sources/syntheses
+```
+
+**Cluster-splitting rule:** when any hub has accumulated **>15 inlinks**, split it into sub-hubs. The `_health.md` Dataview queries surface hubs over the threshold automatically; lint operation acts on them.
+
+**Anti-pattern:** an entry with 50 inlinks is not a "successful index" — it's a hub that has degraded into a god-node. Atomize it.
 
 ## When the taxonomy is wrong
 

@@ -3,6 +3,7 @@ title: <Tool / library / package name>
 category: 04-tools
 tags: [tool]
 status: <draft | promoted>
+confidence: <high | medium | low>
 license: <MIT | Apache-2.0 | proprietary | unknown>
 language: <Python | C# | TypeScript | …>
 maturity: <production | beta | alpha | abandoned>

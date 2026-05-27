@@ -3,6 +3,7 @@ title: <Concept name>
 category: 01-concepts
 tags: [concept]
 status: <draft | promoted>
+confidence: <high | medium | low>
 ---
 
 # <Concept name>

@@ -3,6 +3,7 @@ title: <API surface name>
 category: 03-apis
 tags: [api]
 status: <draft | promoted>
+confidence: <high | medium | low>
 platform: <Fusion 360 | SOLIDWORKS | Onshape | …>
 namespace: <e.g. adsk.fusion>
 ---
