@@ -1,0 +1,32 @@
+name: Contradiction
+description: Flag two or more vault claims that conflict
+title: "[contradiction] "
+labels: ["contradiction", "needs-resolution"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when two or more vault entries make conflicting claims. The agent never silently picks one side — contradictions get flagged, surfaced, and resolved.
+  - type: textarea
+    id: claim-a
+    attributes:
+      label: Claim A
+      description: First claim + source entry
+      placeholder: "[[entry-a]] says X (source: ...)"
+    validations:
+      required: true
+  - type: textarea
+    id: claim-b
+    attributes:
+      label: Claim B
+      description: Second claim + source entry
+      placeholder: "[[entry-b]] says Y (source: ...)"
+    validations:
+      required: true
+  - type: textarea
+    id: resolution-attempt
+    attributes:
+      label: Proposed resolution
+      description: How might these be reconciled? (Optional — can leave for the agent to research.)
+    validations:
+      required: false

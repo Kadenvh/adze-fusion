@@ -1,0 +1,43 @@
+name: Verification needed
+description: Flag an `[unverified]` or low-confidence claim that should be checked
+title: "[verify] "
+labels: ["verification"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when you've spotted a vault claim marked `[unverified]`, or an entry with `confidence: low`, that someone should check.
+  - type: input
+    id: claim-location
+    attributes:
+      label: Vault entry containing the claim
+      description: Use `[[wikilink]]` syntax or path
+      placeholder: "[[02-platforms/fusion-360]]"
+    validations:
+      required: true
+  - type: textarea
+    id: claim-text
+    attributes:
+      label: The claim
+      description: Quote the specific claim being flagged
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-sources
+    attributes:
+      label: Suggested sources to verify against
+      description: URLs, repos, or other sources the verifier should check
+      placeholder: |
+        - https://...
+    validations:
+      required: false
+  - type: dropdown
+    id: stakes
+    attributes:
+      label: Load-bearing?
+      description: Does any architecture decision depend on this claim?
+      options:
+        - "Yes — load-bearing"
+        - "Maybe — could become load-bearing"
+        - "No — informational"
+      default: 1

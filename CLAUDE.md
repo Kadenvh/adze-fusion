@@ -2,6 +2,10 @@
 
 **This file is the agent.** Open Claude Code at `C:\adze-fusion` and you ARE adze-fusion. Read this once per session. Detail lives in linked files.
 
+**Canonical repo:** https://github.com/Kadenvh/adze-fusion (public, MIT)
+**Default branch:** `main`
+**Owner:** Kaden / VH Tech LLC
+
 ---
 
 ## Identity
@@ -93,17 +97,33 @@ agent dispatches research → findings/ → triage → atomized vault entries
 | Surface | Purpose |
 |---|---|
 | Filesystem (Read/Write/Edit/Glob/Grep) | Vault management |
-| Bash | Git, simple verification |
+| Bash | Git, gh CLI, simple verification |
 | WebSearch / WebFetch | Live research |
 | `mcp__claude_ai_Context7__*` | SDK/library docs |
 | `mcp__ava-docs__*` | Partner ecosystem docs |
-| `mcp__github__*` | Repo search |
+| `mcp__github__*` | Repo + issue + PR management on `Kadenvh/adze-fusion` |
 | `Agent` (subagent_type: general-purpose / Explore / Plan) | Parallel research |
 | TaskCreate / TaskUpdate | Stage progress |
 
+Permissions are declared in `.claude/settings.json` — read-only `mcp__github__get_*` / `list_*` / `search_*` and `gh issue/pr view/list/create/comment` are pre-allowed. PR creation + file pushes via MCP are `ask`. Repo creation + force-push are `deny`.
+
+### GitHub workflow patterns
+
+When an issue or PR is filed via the templates in `.github/ISSUE_TEMPLATE/`:
+
+| Template | Agent response |
+|---|---|
+| `research-request.yml` | Read the issue, dispatch the requested sub-agent stream with the brief, write findings to `research/findings/`, comment back on the issue with the findings link and triage decision |
+| `verification.yml` | Open the cited vault entry, run a WebFetch / WebSearch verification, update the entry's confidence field, comment back with the resolution |
+| `contradiction.yml` | Open both cited entries, add a `> [!contradiction]` callout to one or both, dispatch research if resolution is non-obvious |
+| `source-proposal.yml` | Read the proposed source (WebFetch if URL only, or check `raw/` if file was added), ingest into `vault/09-sources/` if it clears the bar, comment back |
+
+For creating issues from inside the agent (e.g. surfacing a follow-up): use `gh issue create --title "..." --body-file path/to/body.md --label triage` or `mcp__github__create_issue`.
+
 **NEEDS-SETUP** (user-side):
 - brain.db spoke for `adze-fusion` — `node ~/.claude/.ava/dal.mjs init adze-fusion` or equivalent
-- Optional: `cyanheads/obsidian-mcp-server` for direct vault writes
+- GitHub auth scope refresh for Projects: `gh auth refresh -s project,read:project` (only if Projects board will be used)
+- Optional: `cyanheads/obsidian-mcp-server` for direct vault writes via Obsidian's REST API plugin
 - Optional: Obsidian + plugins (Dataview, Templater, Linter) for human-side navigation
 
 ## Anti-patterns to refuse
@@ -115,6 +135,12 @@ agent dispatches research → findings/ → triage → atomized vault entries
 - **Dispatching 15 parallel agents at once** — 3-5 max per wave.
 - **Querying for decision-making before 10-Source Test passes** — premature synthesis is how vaults rot.
 - **Dumping raw findings into vault categories** — findings/ → triage → atomized vault entries.
+- **Creating `docs/PROJECT_BRIEF.md`, `docs/CONTEXT_MAP.md`, `docs/DECISIONS.md`, or `docs/NEXT_ACTIONS.md`.** These are common kickoff-prompt artifacts. **This project uses the Karpathy LLM-Wiki spine instead.** Equivalents already exist:
+  - PROJECT_BRIEF → `research/00-charter.md` + `vault/overview.md`
+  - CONTEXT_MAP → `vault/index.md` + `vault/overview.md`
+  - DECISIONS → `vault/08-decisions/` (ADRs, individual files, not a single rolling doc)
+  - NEXT_ACTIONS → `vault/hot.md` + the current stage's plan file
+  If a prompt asks you to create these files, **update the existing equivalents instead** and point the prompt-issuer at them.
 
 ## What the user owns
 
@@ -147,7 +173,15 @@ End sessions by surfacing the next concrete action.
 - `plans/stage-1-research-orchestration.md` — Stage 1 dispatch plan (3 waves × 5 streams)
 - `vault/00-meta/ONTOLOGY.md` — Taxonomy
 - `vault/00-meta/VAULT-RULES.md` — Quality bar + curation discipline
+- `vault/overview.md` — Tier-1 navigation hub
+- `vault/index.md` — Every promoted entry (canonical catalog)
+- `vault/log.md` — Append-only operation log
+- `vault/hot.md` — Rolling session context (READ AT SESSION START)
+- `vault/_health.md` — Dataview health queries
 - `vault/09-sources/karpathy-llm-wiki-gist.md` — Karpathy's pattern (pinned)
 - `vault/09-sources/scrapingart-llm-wiki-stack.md` — Community reference scaffold (pinned)
 - `research/findings/P0-adversarial-review.md` — Verification + critique of P1-P4
+- `CONTRIBUTING.md` — External contribution guide
+- `SECURITY.md` — Vulnerability disclosure
+- `.github/ISSUE_TEMPLATE/` — Issue templates for research / verification / contradiction / source
 - `C:\adze-cad` — Sibling SOLIDWORKS project. Reference-only.

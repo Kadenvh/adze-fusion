@@ -1,0 +1,61 @@
+name: Research request
+description: Propose a new research stream for the agent to dispatch
+title: "[research] "
+labels: ["research", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when you want adze-fusion's agent to dispatch a new sub-agent research stream.
+
+        The agent picks up this issue, drafts a stream brief, fires the sub-agent, and triages findings into the vault.
+  - type: input
+    id: objective
+    attributes:
+      label: Objective
+      description: What is this research stream answering?
+      placeholder: "Document Autodesk Fusion's threading model for add-ins."
+    validations:
+      required: true
+  - type: textarea
+    id: questions
+    attributes:
+      label: Specific questions
+      description: Numbered list. The brief will require the sub-agent to answer each.
+      placeholder: |
+        1. What thread runs add-in callbacks?
+        2. How does Fusion handle blocking calls from add-ins?
+        3. Are there documented timeout behaviors?
+    validations:
+      required: true
+  - type: textarea
+    id: success-criteria
+    attributes:
+      label: Success criteria
+      description: What outputs would satisfy the brief?
+      placeholder: |
+        - Each question answered with a sourced quote
+        - At least one official Autodesk doc cited
+        - Threading model summarized in <200 words
+    validations:
+      required: true
+  - type: textarea
+    id: source-carve
+    attributes:
+      label: Source-carve scope
+      description: Which sources should this stream search? Helps prevent parallel agents stepping on each other.
+      placeholder: |
+        - help.autodesk.com Fusion API docs
+        - Autodesk community forums (api section only)
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical — blocks current stage
+        - High — needed within next 1-2 sessions
+        - Medium — useful, not blocking
+        - Low — future / opportunistic
+      default: 2

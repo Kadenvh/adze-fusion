@@ -1,0 +1,66 @@
+name: Source proposal
+description: Propose a new source to add to the vault
+title: "[source] "
+labels: ["source"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to propose a source (paper, blog, repo, talk, video, etc) that should inform the vault. The agent reviews proposed sources during ingest operations and atomizes high-signal ones into `vault/09-sources/`.
+  - type: input
+    id: source-url
+    attributes:
+      label: Source URL
+    validations:
+      required: true
+  - type: input
+    id: source-title
+    attributes:
+      label: Source title
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author / Organization
+    validations:
+      required: false
+  - type: dropdown
+    id: source-type
+    attributes:
+      label: Source type
+      options:
+        - official-doc
+        - community-blog
+        - github-repo
+        - forum-thread
+        - youtube-talk
+        - paper
+        - book
+        - other
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: relevance
+    attributes:
+      label: What this source contributes
+      description: Concretely — what claim or insight from this source would land in the vault?
+    validations:
+      required: true
+  - type: dropdown
+    id: suggested-category
+    attributes:
+      label: Suggested vault category
+      options:
+        - "01-concepts"
+        - "02-platforms"
+        - "03-apis"
+        - "04-tools"
+        - "05-mcp-servers"
+        - "06-communities"
+        - "07-patterns"
+        - "09-sources only"
+      default: 7
+    validations:
+      required: true
