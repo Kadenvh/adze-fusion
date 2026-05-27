@@ -185,3 +185,13 @@ End sessions by surfacing the next concrete action.
 - `SECURITY.md` — Vulnerability disclosure
 - `.github/ISSUE_TEMPLATE/` — Issue templates for research / verification / contradiction / source
 - `C:\adze-cad` — Sibling SOLIDWORKS project. Reference-only.
+
+## A note on the SpecKit installation (`.specify/`, `.github/agents/speckit.*`)
+
+The repo includes [SpecKit](https://github.com/github/spec-kit) — GitHub's spec-driven development toolkit. **It is installed but intentionally NOT active during Stages 0–3.** SpecKit's `specify → clarify → plan → tasks → implement` flow is the right shape for **Stage 4 (narrow prototype) and beyond** — when there's an actual implementation spec to write. Until then:
+
+- Ignore `.specify/memory/constitution.md` — it's an unfilled template. It will be populated at Stage 3 with principles informed by ADR-001.
+- Ignore `.github/agents/speckit.*.agent.md` and `.github/prompts/speckit.*.prompt.md` — these are SpecKit's own agent definitions, not adze-fusion's.
+- Ignore `.github/copilot-instructions.md` — SpecKit's Copilot bridge stub.
+
+The agent for adze-fusion is defined by THIS CLAUDE.md and the Karpathy LLM-Wiki spine. SpecKit becomes a sibling tool at Stage 4. If a SpecKit slash command is invoked (e.g. `/speckit.specify`) before Stage 4, decline and surface the stage mismatch.

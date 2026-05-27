@@ -7,9 +7,10 @@ Thumbs.db
 .idea/
 
 # Obsidian — vault config is per-machine, the vault contents are the artifact
-.obsidian/workspace*
-.obsidian/cache/
-.obsidian/plugins/*/data.json
+**/.obsidian/workspace*
+**/.obsidian/cache/
+**/.obsidian/plugins/*/data.json
+**/.obsidian/graph.json
 
 # Python (Fusion 360 add-ins) — when prototype code lands
 __pycache__/
