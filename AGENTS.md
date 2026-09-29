@@ -1,6 +1,6 @@
 # adze-fusion
 
-**This file is the agent.** Open Claude Code at `C:\adze-fusion` and you ARE adze-fusion. Read this once per session. Detail lives in linked files.
+**This file is the agent.** Open Codex at `C:\adze-fusion` and you ARE adze-fusion. Read this once per session. Detail lives in linked files.
 
 **Canonical repo:** https://github.com/Kadenvh/adze-fusion (public, MIT)
 **Default branch:** `main`
@@ -56,7 +56,7 @@ The agent operates on the vault through three named operations. Always announce 
 Per P4 verified guidance from Anthropic's multi-agent research post:
 
 - **3-5 parallel workers per wave.** Not 15 at once. Context isolation is the benefit, not just speed.
-- **subagent_type = `general-purpose`** by default. Declare `research-worker` in `.claude/agents/` once Stage 1 stabilizes the pattern.
+- **subagent_type = `general-purpose`** by default. Declare `research-worker` in `.Codex/agents/` once Stage 1 stabilizes the pattern.
 - **Briefs include**: objective, output format, source rules, task boundaries, success criteria.
 - **File-write outputs** (write to specific path) + return ~100-word summary in response.
 - **Source-carve** parallel workers — don't have two agents search the same surfaces.
@@ -73,7 +73,7 @@ The vault is a **three-layer architecture** (per Karpathy LLM-Wiki + ScrapingArt
 ```
 raw/      ← Immutable source documents. LLM reads, never modifies.
 vault/    ← LLM-curated knowledge. The wiki.
-CLAUDE.md ← Master schema (this file).
+AGENTS.md ← Master schema (this file).
 ```
 
 Operating spine inside `vault/`:
@@ -107,7 +107,7 @@ agent dispatches research → findings/ → review (findings/reviews/) → triag
 | `Agent` (subagent_type: general-purpose / Explore / Plan) | Parallel research |
 | TaskCreate / TaskUpdate | Stage progress |
 
-Permissions are declared in `.claude/settings.json` — read-only `mcp__github__get_*` / `list_*` / `search_*` and `gh issue/pr view/list/create/comment` are pre-allowed. PR creation + file pushes via MCP are `ask`. Repo creation + force-push are `deny`.
+Permissions are declared in `.Codex/settings.json` — read-only `mcp__github__get_*` / `list_*` / `search_*` and `gh issue/pr view/list/create/comment` are pre-allowed. PR creation + file pushes via MCP are `ask`. Repo creation + force-push are `deny`.
 
 ### GitHub workflow patterns
 
@@ -123,7 +123,7 @@ When an issue or PR is filed via the templates in `.github/ISSUE_TEMPLATE/`:
 For creating issues from inside the agent (e.g. surfacing a follow-up): use `gh issue create --title "..." --body-file path/to/body.md --label triage` or `mcp__github__create_issue`.
 
 **NEEDS-SETUP** (user-side):
-- brain.db spoke for `adze-fusion` — `node ~/.claude/.ava/dal.mjs init adze-fusion` or equivalent
+- brain.db spoke for `adze-fusion` — `node ~/.Codex/.ava/dal.mjs init adze-fusion` or equivalent
 - GitHub auth scope refresh for Projects: `gh auth refresh -s project,read:project` (only if Projects board will be used)
 - Optional: `cyanheads/obsidian-mcp-server` for direct vault writes via Obsidian's REST API plugin
 - Optional: Obsidian + plugins (Dataview, Templater, Linter) for human-side navigation
@@ -158,7 +158,7 @@ Surface, don't decide:
 
 Every session:
 
-1. Read this CLAUDE.md
+1. Read this AGENTS.md
 2. Read `vault/hot.md` for rolling context
 3. Read `vault/00-meta/VAULT-RULES.md` if promoting anything this session
 4. Check current stage. Confirm with user before starting next stage.
@@ -196,4 +196,4 @@ The repo includes [SpecKit](https://github.com/github/spec-kit) — GitHub's spe
 - Ignore `.github/agents/speckit.*.agent.md` and `.github/prompts/speckit.*.prompt.md` — these are SpecKit's own agent definitions, not adze-fusion's.
 - Ignore `.github/copilot-instructions.md` — SpecKit's Copilot bridge stub.
 
-The agent for adze-fusion is defined by THIS CLAUDE.md and the Karpathy LLM-Wiki spine. SpecKit becomes a sibling tool at Stage 4. If a SpecKit slash command is invoked (e.g. `/speckit.specify`) before Stage 4, decline and surface the stage mismatch.
+The agent for adze-fusion is defined by THIS AGENTS.md and the Karpathy LLM-Wiki spine. SpecKit becomes a sibling tool at Stage 4. If a SpecKit slash command is invoked (e.g. `/speckit.specify`) before Stage 4, decline and surface the stage mismatch.

@@ -45,3 +45,4 @@ logs/
 # Temp working files
 tmp/
 scratch/
+.tmp-*/

@@ -6,61 +6,56 @@ Working memory. Maximum ~500 words. Overwritten as the agent works. Read at sess
 
 ---
 
-**Last updated:** 2026-05-15 (Stage 0.5 — adjustments landed)
+**Last updated:** 2026-05-27 (Stage 0.5 → Stage 1 transition: P1-P4 + P0 promoted, 10-Source Test passed)
 
 ## Current focus
 
-Pre-Stage-1 verification and adjustments. Four findings streams (P1-P4) plus adversarial review (P0) landed. ScrapingArt Karpathy-LLM-Wiki-Stack pattern discovered and integrated into the vault structure (raw/ + wiki/ + CLAUDE.md three-layer architecture; hot.md, overview.md, _health.md spine; ingest/query/lint operations).
+P1-P4 findings + P0 adversarial review have been **atomized into 19 vault entries spanning 8 of 9 categories**. The 10-Source Test (≥10 entries / ≥6 categories / no `confidence: low`) has **passed**: 21 total promoted entries (19 new + the 2 anchor sources promoted in Stage 0.5). Stage 1 → Stage 2 transition is structurally unblocked, but **Stage 1 dispatch (3 waves × 5 streams per `plans/stage-1-research-orchestration.md`) has not been run** — the 10-Source Test gates Stage 2 *synthesis*, but Stage 1's actual research streams still need to fire if we want the vault to be more than the bootstrap pass.
 
 ## Open questions
 
-- Anthropic Fusion connector "default port 27182" — single-source claim from one blog. Anthropic's announcement says nothing about ports. To be marked `[unverified]` in any vault entry derived from P1.
-- Fusion connector requires a paid Fusion subscription — what does this mean for maker / community positioning?
-- Can adze-fusion ship its own MCP-based connector that composes with Anthropic's? Per the announcement, MCP is treated as open. Likely yes; needs Stage 1 deep-dive.
-- Multi-CAD core architecture: shared Python core + per-host adapter, or separate products with shared brand?
+- **Default port for the Anthropic Fusion connector** — `27182` is `[unverified]`; only knightli.com sources it and they call it an "example." Needs App Store install-page fetch.
+- **Project Salvador discontinuation quote** — `[unverified]`; the P1 quote reads contradictorily. Needs re-fetch of `autodesk.com/products/fusion-360/blog/project-salvador-autodesk-fusion-app-store/`.
+- **Marketplace openness to new entrants** — `[unverified]`; certification process exists but no confirmation that it's open to non-pre-selected partners.
+- **Whether Stage 1 should fire now** that the bootstrap pass is in the vault, OR whether the user wants to review the 19 promoted entries first.
+- Multi-CAD core architecture — shared Python core + per-host adapter, or separate products with shared brand? (Held for Stage 3.)
 
 ## Recent decisions
 
-- Project scaffolded at `C:\adze-fusion` (commit `e83dcc0`)
-- Adopt Karpathy 3-layer architecture (`raw/` + `vault/` + `CLAUDE.md`)
-- Adopt 3 core operations (ingest / query / lint)
-- Stage 1 dispatch reshaped: 3 waves × 5 streams (was 4 waves × ~4 — over-parallelized per P4)
-- Stage 1 → Stage 2 gated by 10-Source Test
+- 2026-05-27 — Path A executed: P1-P4 + P0 atomized into vault. Stage 0.5 ingest pass complete.
+- 2026-05-15 — Stage 1 dispatch reshaped to 3 waves × 5 streams (over-parallelization fix per P4).
+- 2026-05-15 — Stage 1 → Stage 2 gated by 10-Source Test (now passed).
+- 2026-05-15 — Karpathy 3-layer architecture adopted (`raw/` + `vault/` + `CLAUDE.md`).
 
 ## Last operations
 
-- 2026-05-15 — Stage 0 scaffold landed (commit `e83dcc0`)
-- 2026-05-15 — Dispatched P1-P4 (parallel research streams)
-- 2026-05-15 — Dispatched P0 (adversarial review)
-- 2026-05-15 — Verification pass via WebFetch (Anthropic post, Karpathy gist, ScrapingArt repo)
-- 2026-05-15 — Stage 0.5 adjustments landed (this update)
+- 2026-05-27 — `ingest`: 19 vault entries written from P1-P4 + P0; index.md + log.md updated; 10-Source Test passed.
+- 2026-05-15 — Stage 0.5 adjustments landed.
+- 2026-05-15 — P0 adversarial review dispatched, P1-P4 parallel research streams dispatched.
+- 2026-05-15 — Stage 0 scaffold landed (commit `e83dcc0`).
 
 ## Active pages
 
-Findings (not yet promoted to vault):
+Promoted entries (21 total, 8 categories): see [[index]] for the canonical list.
 
-- `research/findings/P0-adversarial-review.md` — graded P1 B+, P2 B-, P3 B+, P4 A-
-- `research/findings/P1-fusion-connector-ecosystem.md` — Anthropic Fusion connector confirmed, port claim refuted
-- `research/findings/P2-claude-code-project-foundation.md` — Claude Code best practices
-- `research/findings/P3-obsidian-llm-vault-curation.md` — Karpathy + cyanheads MCP recommended
-- `research/findings/P4-subagent-orchestration.md` — 3-5 parallel per wave
+Findings still in `research/findings/` (kept as citation backstop):
 
-Sources pinned but not yet promoted:
-
-- [[09-sources/karpathy-llm-wiki-gist]] (created Stage 0.5)
-- [[09-sources/scrapingart-llm-wiki-stack]] (created Stage 0.5)
+- `P0-adversarial-review.md`, `P1-fusion-connector-ecosystem.md`, `P2-claude-code-project-foundation.md`, `P3-obsidian-llm-vault-curation.md`, `P4-subagent-orchestration.md`
 
 ## Next concrete action
 
-Either:
-- (a) **Promote P1-P4 findings into vault entries.** Each finding gets atomized into 3-8 entries spanning concepts / tools / mcp-servers / patterns / sources. After promotion, the **10-Source Test** is checked.
-- (b) **Dispatch Stage 1.** 3 waves × 5 streams per the revised `plans/stage-1-research-orchestration.md`. New findings drain into new vault entries.
+**Decision point for the user.** With the 10-Source Test passed, three paths are open:
 
-User picks. Likely (a) first since promotion populates the vault from already-paid-for research; (b) extends coverage.
+(a) **Dispatch Stage 1 Wave 1** (5 parallel streams per `plans/stage-1-research-orchestration.md` — Fusion platform deep-dive: runtime, doc model, Anthropic connector deep-dive, App Store mechanics, cross-platform reality).
+(b) **Verify the bootstrap pass** — re-fetch the three `[unverified]` items (port 27182, Salvador quote, Marketplace openness) before committing to Stage 1 briefs.
+(c) **Audit the promoted entries** — read through the 19 new entries and flag any that don't clear the 4-point quality bar before they're treated as load-bearing.
+
+User picks. Likely (b) is the smallest-step value — three short web fetches close known gaps cheaply. (a) is the obvious "go big" follow-up. (c) is the safety play.
 
 ## Related
 
 - [[overview]]
 - [[index]]
 - [[log]]
+- [[_health]]
 - [[../CLAUDE]]

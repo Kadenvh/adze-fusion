@@ -117,7 +117,7 @@ Stage 1 → Stage 2 transition requires **at least 10 promoted entries** spannin
 
 Check entry count above. Categories: 01-concepts, 02-platforms, 03-apis, 04-tools, 05-mcp-servers, 06-communities, 07-patterns, 08-decisions, 09-sources.
 
-**Status (manual check at lint time):** [ ] PASSED · [ ] PENDING — entries: N · categories with ≥1 entry: N
+**Status (manual check at lint time):** [x] PASSED · [ ] PENDING — entries: **21** · categories with ≥1 entry: **8** (01, 02, 03, 04, 05, 06, 07, 09 — only 08-decisions is empty, as designed until Stage 3). Last verified: 2026-05-27 after Stage 0.5 promotion pass.
 
 ---
 
